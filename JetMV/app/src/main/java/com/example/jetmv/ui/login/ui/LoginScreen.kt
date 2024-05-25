@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.R
+import kotlinx.coroutines.launch
 
 @Composable
 fun LoginScreen(viewModel: LoginViewModel){
@@ -43,24 +45,36 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
+    val corutineScope = rememberCoroutineScope()
 
-    Column(modifier = modifier) {
-       HeaderImage(Modifier.align(Alignment.CenterHorizontally))
-       Spacer(modifier = Modifier.padding(16.dp))
-       EmailField(email) { viewModel.onLoginChanged(it) }
-       Spacer(modifier = Modifier.padding(16.dp))
-       PasswordField()
-       Spacer(modifier = Modifier.padding(8.dp))
-       ForgotPassword(Modifier.align(Alignment.End))
-       Spacer(modifier = Modifier.padding(16.dp))
-       LoginButton()
-   }
+
+    if(isLoading){
+        Box(Modifier.fillMaxSize()){
+            CircularProgressIndicator(Modifier.align(Alignment.Center))
+        }
+    }else{
+        Column(modifier = modifier) {
+            HeaderImage(Modifier.align(Alignment.CenterHorizontally))
+            Spacer(modifier = Modifier.padding(16.dp))
+            EmailField(email) { viewModel.onLoginChanged(it, password) }
+            Spacer(modifier = Modifier.padding(16.dp))
+            PasswordField(password) {viewModel.onLoginChanged(email, it)}
+            Spacer(modifier = Modifier.padding(8.dp))
+            ForgotPassword(Modifier.align(Alignment.End))
+            Spacer(modifier = Modifier.padding(16.dp))
+            LoginButton(loginEnable){
+                corutineScope.launch {
+                    viewModel.onLoginSelected()
+                }
+            }
+        }
+    }
 }
 
 @Composable
-fun LoginButton() {
+fun LoginButton(loginEnable: Boolean, onLoginSelected : () -> Unit) {
     Button(
-        onClick = {},
+        onClick = { onLoginSelected() },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
@@ -68,7 +82,7 @@ fun LoginButton() {
             containerColor = Color(244, 67, 54, 255),
             disabledContainerColor = Color(255, 152, 0, 255)
         ),
-        enabled = true
+        enabled = loginEnable
         ) {
         Text(text = "Iniciar Sesión")
     }
@@ -86,8 +100,8 @@ fun ForgotPassword(modifier: Modifier) {
 }
 
 @Composable
-fun PasswordField() {
-    TextField(value = "",
+fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
+    TextField(value = password,
         onValueChange = {},
         modifier = Modifier.fillMaxWidth(),
         placeholder = { Text(text = "Contraseña")},

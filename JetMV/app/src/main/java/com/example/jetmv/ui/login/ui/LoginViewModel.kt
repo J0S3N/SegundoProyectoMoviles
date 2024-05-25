@@ -41,6 +41,11 @@ class LoginViewModel : ViewModel() {
 
     suspend fun onLoginSelected() {
         _isLoading.value = true
+        // conexión con la base de datos
+        // trae la información necesaria
+        // muestra la ventana principal
+        // o mostramos un error porque no se pudo hacer Login
+
         delay(4000)
         _isLoading.value = false
     }
