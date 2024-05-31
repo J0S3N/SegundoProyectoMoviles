@@ -27,44 +27,44 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.R
+import androidx.navigation.NavController
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel){
+fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     Box(modifier = Modifier
         .fillMaxSize()
         .padding(16.dp)){
-        Login(Modifier.align(Alignment.TopCenter), viewModel)
-
+        Login(Modifier.align(Alignment.TopCenter), viewModel, navController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel) {
+fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavController) {
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
     val loginEnable: Boolean by viewModel.loginEnable.observeAsState(initial = false)
     val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
-    val corutineScope = rememberCoroutineScope()
-
+    val coroutineScope = rememberCoroutineScope()
 
     if(isLoading){
         Box(Modifier.fillMaxSize()){
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
-    }else{
+    } else {
         Column(modifier = modifier) {
             HeaderImage(Modifier.align(Alignment.CenterHorizontally))
             Spacer(modifier = Modifier.padding(16.dp))
             EmailField(email) { viewModel.onLoginChanged(it, password) }
             Spacer(modifier = Modifier.padding(16.dp))
-            PasswordField(password) {viewModel.onLoginChanged(email, it)}
+            PasswordField(password) { viewModel.onLoginChanged(email, it) }
             Spacer(modifier = Modifier.padding(8.dp))
             ForgotPassword(Modifier.align(Alignment.End))
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(loginEnable){
-                corutineScope.launch {
+            LoginButton(loginEnable) {
+                coroutineScope.launch {
                     viewModel.onLoginSelected()
+                    navController.navigate("principal") // Navega a la pantalla principal después del login
                 }
             }
         }
