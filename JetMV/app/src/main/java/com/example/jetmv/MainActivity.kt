@@ -13,10 +13,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.jetmv.ui.login.ui.EntrenamientosScreen
+import com.example.jetmv.ui.login.ui.EntrenamientosViewModel
 import com.example.jetmv.ui.login.ui.LoginScreen
 import com.example.jetmv.ui.login.ui.LoginViewModel
+import com.example.jetmv.ui.login.ui.PRsScreen
+import com.example.jetmv.ui.login.ui.PRsViewModel
 import com.example.jetmv.ui.login.ui.PrincipalScreen
 import com.example.jetmv.ui.login.ui.PrincipalViewModel
+import com.example.jetmv.ui.login.ui.WeightCalculatorScreen
+import com.example.jetmv.ui.login.ui.WeightCalculatorViewModel
 import com.example.jetmv.ui.theme.JetMVTheme
 
 class MainActivity : ComponentActivity() {
@@ -42,6 +48,14 @@ fun AppNavigation() {
         composable("principal") {
             PrincipalScreen(PrincipalViewModel())
         }
+        composable("entrenamientos") {
+            EntrenamientosScreen(EntrenamientosViewModel())
+        }
+        composable("prs") {
+            PRsScreen(PRsViewModel())
+        }
+        composable("weight_calculator") {
+            WeightCalculatorScreen(WeightCalculatorViewModel())
+        }
     }
 }
-
