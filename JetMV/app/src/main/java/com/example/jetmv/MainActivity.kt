@@ -1,5 +1,6 @@
 package com.example.jetmv
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -9,14 +10,18 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.jetmv.ui.db.DatabaseHelper
 import com.example.jetmv.ui.login.ui.EntrenamientosScreen
 import com.example.jetmv.ui.login.ui.EntrenamientosViewModel
 import com.example.jetmv.ui.login.ui.LoginScreen
 import com.example.jetmv.ui.login.ui.LoginViewModel
+import com.example.jetmv.ui.login.ui.LoginViewModelFactory
 import com.example.jetmv.ui.login.ui.PRsScreen
 import com.example.jetmv.ui.login.ui.PRsViewModel
 import com.example.jetmv.ui.login.ui.PrincipalScreen
@@ -28,6 +33,11 @@ import com.example.jetmv.ui.theme.JetMVTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Inicializar la base de datos
+        val dbHelper = DatabaseHelper(this)
+        dbHelper.writableDatabase
+
         setContent {
             JetMVTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -43,7 +53,9 @@ fun AppNavigation() {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "login") {
         composable("login") {
-            LoginScreen(LoginViewModel(), navController)
+            val application = LocalContext.current.applicationContext as Application
+            val loginViewModel: LoginViewModel = viewModel(factory = LoginViewModelFactory(application))
+            LoginScreen(loginViewModel, navController)
         }
         composable("principal") {
             PrincipalScreen(PrincipalViewModel())

@@ -1,53 +1,62 @@
 package com.example.jetmv.ui.login.ui
 
-import android.util.Patterns
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.jetmv.ui.db.DatabaseHelper
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
+class LoginViewModel(application: Application) : AndroidViewModel(application) {
+    private val dbHelper = DatabaseHelper(application)
 
-class LoginViewModel : ViewModel() {
     private val _email = MutableLiveData<String>()
-    val email : LiveData<String> = _email
+    val email: LiveData<String> = _email
 
     private val _password = MutableLiveData<String>()
     val password: LiveData<String> = _password
-
-    fun onLoginChanged(email:String, password: String){
-        _email.value = email
-        _password.value = password
-        _loginEnable.value = isValidEmail(email) && isValidPassword(password)
-    }
 
     private val _loginEnable = MutableLiveData<Boolean>()
     val loginEnable: LiveData<Boolean> = _loginEnable
 
     private val _isLoading = MutableLiveData<Boolean>()
-    val isLoading: MutableLiveData<Boolean> = _isLoading
+    val isLoading: LiveData<Boolean> = _isLoading
 
+    private val _loginResult = MutableLiveData<Boolean>()
+    val loginResult: LiveData<Boolean> = _loginResult
+
+    fun onLoginChanged(email: String, password: String) {
+        _email.value = email
+        _password.value = password
+        _loginEnable.value = isValidEmail(email) && isValidPassword(password)
+    }
 
     private fun isValidEmail(email: String): Boolean {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
 
     private fun isValidPassword(password: String): Boolean {
-        // aquí van las validaciones con Regex
-        // se verifica normalmente largo
-        // combinación de mayúsculas, minúsculas, números
-        // caracteres especiales y el largo que ya tenemos.
-        return password.length > 6
+        val passwordPattern = """^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$"""
+        val passwordMatcher = Regex(passwordPattern)
+        return passwordMatcher.find(password) != null
     }
 
-    suspend fun onLoginSelected() {
+    fun onLoginSelected() {
         _isLoading.value = true
-        // conexión con la base de datos
-        // trae la información necesaria
-        // muestra la ventana PrincipalScreen
-        // o mostramos un error porque no se pudo hacer Login
 
-        delay(4000)
-        _isLoading.value = false
+        viewModelScope.launch {
+            delay(2000) // Simulando el retraso de la red o la consulta a la base de datos
+
+            val email = _email.value ?: ""
+            val password = _password.value ?: ""
+
+            val success = dbHelper.checkUserCredentials(email, password)
+
+            _loginResult.value = success
+            _isLoading.value = false
+        }
     }
-
 }
+
