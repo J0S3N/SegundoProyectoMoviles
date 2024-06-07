@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 fun LoginScreen(viewModel: LoginViewModel = viewModel(), navController: NavController) {
     val isLoading by viewModel.isLoading.observeAsState(initial = false)
     val loginResult by viewModel.loginResult.observeAsState()
+    val loginEnable by viewModel.loginEnable.observeAsState(initial = false)
 
     LaunchedEffect(loginResult) {
         if (loginResult == true) {
@@ -35,7 +36,6 @@ fun LoginScreen(viewModel: LoginViewModel = viewModel(), navController: NavContr
             Column(modifier = Modifier.align(Alignment.Center)) {
                 val email by viewModel.email.observeAsState("")
                 val password by viewModel.password.observeAsState("")
-                val loginEnable by viewModel.loginEnable.observeAsState(false)
                 val coroutineScope = rememberCoroutineScope()
 
                 Text("Login", style = MaterialTheme.typography.headlineSmall)

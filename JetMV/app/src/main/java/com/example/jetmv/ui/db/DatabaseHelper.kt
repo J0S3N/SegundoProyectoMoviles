@@ -25,8 +25,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     private fun preCargaDatos(db: SQLiteDatabase) {
-        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('usuario1', 'password1')")
-        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('usuario2', 'password2')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user1@example.com', 'P@ssw0rd1')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user2@example.com', 'S3cureP@ss')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user3@example.com', 'Str0ngP@ss!')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user4@example.com', 'Adm1n@tr@t0r')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user5@example.com', 'M@nager123')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user6@example.com', 'Qw3rty!P@ss')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user7@example.com', 'V3ryS3cur3!')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user8@example.com', 'An0th3rP@ss')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user9@example.com', 'P@ssw0rdStr0ng')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user10@example.com', 'S@feP@ss123')")
         db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-01', 'Bench Press')")
         db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-01', 'Deadlift')")
         db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (2, '2024-06-01', 'Snatch')")
@@ -47,7 +55,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "gimnasio.db"
-        private const val DATABASE_VERSION = 1
+        private const val DATABASE_VERSION = 2
 
         private const val CREATE_USUARIOS_TABLE = """
             CREATE TABLE IF NOT EXISTS usuarios (

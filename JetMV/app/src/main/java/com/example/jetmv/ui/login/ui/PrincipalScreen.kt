@@ -12,10 +12,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 
 @Composable
-fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
+fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel(), navController: NavController) {
     val navigationEvent by viewModel.navigationEvent.collectAsState()
 
     Box(modifier = Modifier.fillMaxSize().padding(16.dp)) {
@@ -29,24 +30,24 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(
-                onClick = { viewModel.navigateTo("Screen1") },
+                onClick = { viewModel.navigateTo("weight_calculator") },
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             ) {
-                Text("Navegar a Pantalla 1")
+                Text("Navegar a Calculadora de Pesos")
             }
 
             Button(
-                onClick = { viewModel.navigateTo("Screen2") },
+                onClick = { viewModel.navigateTo("prs") },
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             ) {
-                Text("Navegar a Pantalla 2")
+                Text("Navegar a PRs")
             }
 
             Button(
-                onClick = { viewModel.navigateTo("Screen3") },
+                onClick = { viewModel.navigateTo("entrenamientos") },
                 modifier = Modifier.fillMaxWidth().padding(8.dp)
             ) {
-                Text("Navegar a Pantalla 3")
+                Text("Navegar a Entrenamientos")
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -61,8 +62,10 @@ fun PrincipalScreen(viewModel: PrincipalViewModel = viewModel()) {
 
         // Observa los eventos de navegación
         navigationEvent?.let { screen ->
-            // Lógica de navegación aquí, por ejemplo, usando Navigation Compose
-            // navController.navigate(screen)
+            // Lógica de navegación aquí, usando Navigation Compose
+            navController.navigate(screen) {
+                popUpTo("principal") { inclusive = true }
+            }
         }
     }
 }
