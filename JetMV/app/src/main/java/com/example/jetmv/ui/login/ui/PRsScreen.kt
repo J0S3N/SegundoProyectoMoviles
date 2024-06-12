@@ -48,6 +48,13 @@ fun PRsScreen(viewModel: PRsViewModel = viewModel(), navController: NavControlle
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
+            onClick = { viewModel.saveAllPRs() },
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        ) {
+            Text("Guardar")
+        }
+
+        Button(
             onClick = { navController.navigate("principal") },
             modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {

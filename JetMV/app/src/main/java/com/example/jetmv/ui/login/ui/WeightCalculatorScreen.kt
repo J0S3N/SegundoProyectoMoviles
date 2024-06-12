@@ -3,7 +3,6 @@ package com.example.jetmv.ui.login.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -11,9 +10,11 @@ import androidx.navigation.NavController
 
 @Composable
 fun WeightCalculatorScreen(viewModel: WeightCalculatorViewModel = viewModel(), navController: NavController) {
-    val distribution by viewModel.distribution.observeAsState(initial = emptyMap())
-    var inputWeight by remember { mutableStateOf("") }
-    val weightError = inputWeight.toIntOrNull() == null || inputWeight.toInt() <= 45
+    val (inputWeight, setInputWeight) = remember { mutableStateOf("") }
+    val weightDistribution by viewModel.weightDistribution.collectAsState(initial = emptyMap())
+    val (errorMessage, setErrorMessage) = remember { mutableStateOf<String?>(null) }
+    val barWeight = 45.0
+    val maxWeight = 400.0
 
     Column(
         modifier = Modifier
@@ -25,42 +26,38 @@ fun WeightCalculatorScreen(viewModel: WeightCalculatorViewModel = viewModel(), n
 
         TextField(
             value = inputWeight,
-            onValueChange = { inputWeight = it },
-            modifier = Modifier.fillMaxWidth(),
-            label = { Text("Peso total (incluyendo la barra)") },
-            isError = weightError
+            onValueChange = setInputWeight,
+            label = { Text("Peso Deseado (incluyendo barra)") },
+            modifier = Modifier.fillMaxWidth()
         )
-        if (weightError) {
-            Text(
-                "Por favor ingrese un número mayor a 45",
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
 
-        Spacer(modifier = Modifier.height(8.dp))
+        if (errorMessage != null) {
+            Text(errorMessage, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyMedium)
+        }
 
         Button(
             onClick = {
-                val totalWeight = inputWeight.toIntOrNull()
-                if (totalWeight != null && totalWeight > 45) {
-                    viewModel.calculateDistribution(totalWeight)
+                val weight = inputWeight.toDoubleOrNull()
+                if (weight == null || weight < barWeight || weight > maxWeight) {
+                    setErrorMessage("Por favor, ingrese un peso válido entre $barWeight y $maxWeight libras.")
+                } else {
+                    setErrorMessage(null)
+                    viewModel.calculateWeightDistribution(weight)
                 }
             },
-            modifier = Modifier.fillMaxWidth(),
-            enabled = !weightError
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
         ) {
             Text("Calcular")
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Text("Distribución de pesos:", style = MaterialTheme.typography.headlineSmall)
-        Text("Barra: 45 lbs", style = MaterialTheme.typography.bodyLarge)
-
-        distribution.forEach { (weight, count) ->
-            Text("$weight: $count", style = MaterialTheme.typography.bodyLarge)
+        Text("Distribución de Pesos (incluyendo la barra de $barWeight lbs):", style = MaterialTheme.typography.bodyLarge)
+        weightDistribution.forEach { (weight, count) ->
+            Text("$weight lbs: $count", style = MaterialTheme.typography.bodyMedium)
         }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = { navController.navigate("principal") },

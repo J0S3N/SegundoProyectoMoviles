@@ -1,35 +1,33 @@
 package com.example.jetmv.ui.login.ui
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 class WeightCalculatorViewModel : ViewModel() {
-    private val barWeight = 45
+    private val _weightDistribution = MutableStateFlow<Map<Double, Int>>(emptyMap())
+    val weightDistribution: StateFlow<Map<Double, Int>> = _weightDistribution
 
-    private val _distribution = MutableLiveData<Map<String, Int>>()
-    val distribution: LiveData<Map<String, Int>> = _distribution
+    fun calculateWeightDistribution(totalWeight: Double) {
+        val barWeight = 45.0
+        val plateWeights = listOf(45.0, 35.0, 25.0, 15.0, 10.0, 5.0, 2.5)
+        var remainingWeight = (totalWeight - barWeight) / 2
 
-    fun calculateDistribution(totalWeight: Int) {
-        val remainingWeight = totalWeight - barWeight
         if (remainingWeight < 0) {
-            _distribution.value = emptyMap()
+            _weightDistribution.value = emptyMap()
             return
         }
 
-        val weights = listOf(45.0, 35.0, 25.0, 15.0, 10.0, 5.0, 2.5)
-        val weightCounts = mutableMapOf<String, Int>()
-        var remaining = remainingWeight.toDouble()
+        val distribution = mutableMapOf<Double, Int>()
 
-        for (weight in weights) {
-            val count = (remaining / (weight * 2)).toInt()
-            if (count > 0) {
-                weightCounts["Discos de $weight"] = count * 2
-                remaining -= count * weight * 2
+        for (plate in plateWeights) {
+            while (remainingWeight >= plate) {
+                distribution[plate] = distribution.getOrDefault(plate, 0) + 2
+                remainingWeight -= plate
             }
         }
 
-        _distribution.value = weightCounts
+        _weightDistribution.update { distribution }
     }
 }
-

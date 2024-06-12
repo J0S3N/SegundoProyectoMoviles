@@ -25,19 +25,51 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
     }
 
     private fun preCargaDatos(db: SQLiteDatabase) {
+        // Insertar usuarios (ya estaba en el código anterior)
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user1@example.com', 'P@ssw0rd1')")
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user2@example.com', 'S3cureP@ss')")
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user3@example.com', 'Str0ngP@ss!')")
-        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user4@example.com', 'Adm1n@tr@t0r')")
+        db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user4@example.com', 'Adm1ntr@t0r')")
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user5@example.com', 'M@nager123')")
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user6@example.com', 'Qw3rty!P@ss')")
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user7@example.com', 'V3ryS3cur3!')")
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user8@example.com', 'An0th3rP@ss')")
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user9@example.com', 'P@ssw0rdStr0ng')")
         db.execSQL("INSERT INTO usuarios (nombre_usuario, password) VALUES ('user10@example.com', 'S@feP@ss123')")
-        db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-01', 'Bench Press')")
-        db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-01', 'Deadlift')")
-        db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (2, '2024-06-01', 'Snatch')")
+
+        // Insertar datos de entrenamiento para el usuario con ID 1 para la fecha 12/06/2024
+        val ejercicios = listOf(
+            "Bench Press",
+            "Shoulder Press",
+            "Deadlift",
+            "Squat",
+            "Pull-Up",
+            "Chin-Up",
+            "Bicep Curl",
+            "Tricep Extension",
+            "Leg Press",
+            "Leg Curl",
+            "Leg Extension",
+            "Calf Raise",
+            "Lat Pulldown",
+            "Seated Row",
+            "Bent-Over Row",
+            "Dumbbell Fly",
+            "Incline Bench Press",
+            "Decline Bench Press",
+            "Cable Crossover",
+            "Dumbbell Shoulder Press"
+        )
+
+        for (ejercicio in ejercicios) {
+            db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-12', '$ejercicio')")
+            db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-13', '$ejercicio')")
+            db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-14', '$ejercicio')")
+            db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-15', '$ejercicio')")
+            db.execSQL("INSERT INTO entrenamientos (usuario_id, fecha, ejercicio) VALUES (1, '2024-06-16', '$ejercicio')")
+        }
+
+        // Añadir otros datos de ejemplo si es necesario
         db.execSQL("INSERT INTO records_personales (usuario_id, bench_press, shoulder_press, snatch, clean, deadlift) VALUES (1, 100, 80, 60, 90, 120)")
         db.execSQL("INSERT INTO records_personales (usuario_id, bench_press, shoulder_press, snatch, clean, deadlift) VALUES (2, 110, 85, 65, 95, 130)")
         db.execSQL("INSERT INTO distribucion_pesos (usuario_id, peso_total, discos_45, discos_35, discos_5, discos_2_5) VALUES (1, 220, 2, 2, 2, 2)")
@@ -55,7 +87,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "gimnasio.db"
-        private const val DATABASE_VERSION = 3
+        private const val DATABASE_VERSION = 4
 
         private const val CREATE_USUARIOS_TABLE = """
             CREATE TABLE IF NOT EXISTS usuarios (
