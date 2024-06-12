@@ -47,15 +47,19 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         _isLoading.value = true
 
         viewModelScope.launch {
-            delay(2000) // Simulando el retraso de la red o la consulta a la base de datos
+            try {
+                val email = _email.value ?: ""
+                val password = _password.value ?: ""
 
-            val email = _email.value ?: ""
-            val password = _password.value ?: ""
+                val success = dbHelper.checkUserCredentials(email, password)
 
-            val success = dbHelper.checkUserCredentials(email, password)
-
-            _loginResult.value = success
-            _isLoading.value = false
+                _loginResult.value = success
+            } catch (e: Exception) {
+                e.printStackTrace()
+                _loginResult.value = false
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 }

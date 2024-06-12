@@ -25,7 +25,6 @@ fun LoginScreen(viewModel: LoginViewModel = viewModel(), navController: NavContr
             }
         } else if (loginResult == false) {
             // Mostrar mensaje de error si es necesario
-            // Esto puede ser un Snackbar, Toast, etc.
         }
     }
 
@@ -64,7 +63,11 @@ fun LoginScreen(viewModel: LoginViewModel = viewModel(), navController: NavContr
                 Button(
                     onClick = {
                         coroutineScope.launch {
-                            viewModel.onLoginSelected()
+                            try {
+                                viewModel.onLoginSelected()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            }
                         }
                     },
                     enabled = loginEnable,

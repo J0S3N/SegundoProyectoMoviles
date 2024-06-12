@@ -11,11 +11,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import java.text.SimpleDateFormat
 import java.util.*
 
 @Composable
-fun EntrenamientosScreen(viewModel: EntrenamientosViewModel = viewModel()) {
+fun EntrenamientosScreen(viewModel: EntrenamientosViewModel = viewModel(), navController: NavController) {
     val selectedDate by viewModel.selectedDate.observeAsState()
     val exercises by viewModel.exercises.observeAsState(emptyList())
 
@@ -39,6 +40,13 @@ fun EntrenamientosScreen(viewModel: EntrenamientosViewModel = viewModel()) {
                 items(exercises) { exercise ->
                     Text(exercise, modifier = Modifier.padding(8.dp))
                 }
+            }
+
+            Button(
+                onClick = { navController.navigate("principal") },
+                modifier = Modifier.fillMaxWidth().padding(8.dp)
+            ) {
+                Text("Volver a la Pantalla Principal")
             }
         }
     }
@@ -69,4 +77,5 @@ fun DatePickerButton(
     Button(onClick = { datePickerDialog.show() }) {
         Text(text = selectedDate?.let { dateFormatter.format(it) } ?: "Selecciona una fecha")
     }
+
 }

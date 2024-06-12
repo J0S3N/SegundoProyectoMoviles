@@ -7,9 +7,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 @Composable
-fun PRsScreen(viewModel: PRsViewModel = viewModel()) {
+fun PRsScreen(viewModel: PRsViewModel = viewModel(), navController: NavController) {
     val benchPress by viewModel.benchPress.observeAsState(initial = 0)
     val shoulderPress by viewModel.shoulderPress.observeAsState(initial = 0)
     val snatch by viewModel.snatch.observeAsState(initial = 0)
@@ -42,6 +43,15 @@ fun PRsScreen(viewModel: PRsViewModel = viewModel()) {
         }
         PRInputField("Deadlift", deadlift) { value ->
             viewModel.updateDeadlift(value)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = { navController.navigate("principal") },
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        ) {
+            Text("Volver a la Pantalla Principal")
         }
     }
 }

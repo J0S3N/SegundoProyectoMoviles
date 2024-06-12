@@ -55,7 +55,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "gimnasio.db"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 3
 
         private const val CREATE_USUARIOS_TABLE = """
             CREATE TABLE IF NOT EXISTS usuarios (

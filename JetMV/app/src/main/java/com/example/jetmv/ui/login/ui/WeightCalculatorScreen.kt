@@ -7,9 +7,10 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 
 @Composable
-fun WeightCalculatorScreen(viewModel: WeightCalculatorViewModel = viewModel()) {
+fun WeightCalculatorScreen(viewModel: WeightCalculatorViewModel = viewModel(), navController: NavController) {
     val distribution by viewModel.distribution.observeAsState(initial = emptyMap())
     var inputWeight by remember { mutableStateOf("") }
     val weightError = inputWeight.toIntOrNull() == null || inputWeight.toInt() <= 45
@@ -59,6 +60,13 @@ fun WeightCalculatorScreen(viewModel: WeightCalculatorViewModel = viewModel()) {
 
         distribution.forEach { (weight, count) ->
             Text("$weight: $count", style = MaterialTheme.typography.bodyLarge)
+        }
+
+        Button(
+            onClick = { navController.navigate("principal") },
+            modifier = Modifier.fillMaxWidth().padding(8.dp)
+        ) {
+            Text("Volver a la Pantalla Principal")
         }
     }
 }

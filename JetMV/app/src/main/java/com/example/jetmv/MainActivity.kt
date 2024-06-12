@@ -58,16 +58,17 @@ fun AppNavigation() {
             LoginScreen(loginViewModel, navController)
         }
         composable("principal") {
-            PrincipalScreen(viewModel = viewModel(), navController = navController)
+            val principalViewModel: PrincipalViewModel = viewModel()
+            PrincipalScreen(principalViewModel, navController)
         }
         composable("weight_calculator") {
-            WeightCalculatorScreen(viewModel = viewModel())
+            WeightCalculatorScreen(viewModel = viewModel(), navController = navController)
         }
         composable("prs") {
-            PRsScreen(viewModel = viewModel())
+            PRsScreen(viewModel = viewModel(), navController = navController)
         }
         composable("entrenamientos") {
-            EntrenamientosScreen(viewModel = viewModel())
+            EntrenamientosScreen(viewModel = viewModel(), navController = navController)
         }
     }
 }
